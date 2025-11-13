@@ -1,508 +1,463 @@
-import React, { useState } from 'react';
-import { ShoppingCart, X, Copy, Check, ExternalLink, Globe } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shark Brainrot Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
 
-const OnlineStore = () => {
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                        ESTADOS DO COMPONENTE                           ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  const [region, setRegion] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showPayment, setShowPayment] = useState(false);
-  const [copiedPix, setCopiedPix] = useState(false);
-  const [copiedPaypal, setCopiedPaypal] = useState(false);
-  const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+    <script>
+        // CONFIGURAÇÕES - EDITE AQUI!
+        const CONFIG = {
+            USD_TO_BRL: 5.0,
+            paymentInfo: {
+                pix: 'sua-chave-pix@email.com',
+                paypal: 'your-paypal@email.com',
+                discordInvite: 'https://discord.gg/bdVTR7kQQ6'
+            },
+            logoUrl: 'https://i.imgur.com/YourImageID.png'
+        };
 
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                     CONFIGURAÇÕES DE PAGAMENTO                         ║
-  // ║  ⚙️  Edite aqui suas informações de pagamento e Discord                ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  
-  // Taxa de conversão USD para BRL (ajuste conforme necessário)
-  const USD_TO_BRL = 5.0;
+        // TRADUÇÕES
+        const TRANSLATIONS = {
+            BR: {
+                title: 'Shark Brainrot Store',
+                subtitle: 'Itens Digitais Premium',
+                selectRegion: 'Selecione sua Região',
+                selectRegionDesc: 'Escolha sua localização para ver preços na sua moeda',
+                brasil: 'Brasil',
+                usa: 'United States',
+                pricesBRL: 'Preços em BRL',
+                pricesUSD: 'Prices in USD',
+                hero: 'Produtos Digitais de Qualidade',
+                heroDesc: 'Entrega instantânea. Acesso vitalício. Itens profissionais para seus projetos.',
+                buyNow: 'Comprar Agora',
+                paymentTitle: 'Complete sua Compra',
+                totalAmount: 'Valor Total',
+                pixTitle: '🇧🇷 Pagamento via PIX',
+                pixKey: 'Chave PIX:',
+                pixInstructions: 'Envie o pagamento via PIX usando a chave acima',
+                instructionsTitle: '📋 Instruções de Pagamento',
+                step1: '1. Copie as informações de pagamento acima',
+                step2: '2. Envie o valor exato:',
+                step3: '3. Clique no botão "Confirmei o Pagamento" abaixo',
+                step4: '4. Entre no Discord para receber seu produto',
+                confirmPayment: 'Confirmei o Pagamento',
+                joinDiscord: 'Entrar no Discord Server',
+                successTitle: '✅ Pagamento Confirmado!',
+                successMessage: 'Agora entre no nosso servidor Discord para receber seu produto. Nossa equipe irá verificar e entregar em breve!',
+                footer: '© 2024 Shark Brainrot Store. Todos os produtos são entregues instantaneamente após verificação.',
+                footerNote: 'Pagamentos seguros • Entrega instantânea • Suporte 24/7 no Discord',
+                instantDelivery: 'Entrega instantânea',
+                lifetimeAccess: 'Acesso vitalício',
+                commercialLicense: 'Licença comercial'
+            },
+            USA: {
+                title: 'Shark Brainrot Store',
+                subtitle: 'Premium Digital Items',
+                selectRegion: 'Select Your Region',
+                selectRegionDesc: 'Choose your location to see prices in your currency',
+                brasil: 'Brasil',
+                usa: 'United States',
+                pricesBRL: 'Preços em BRL',
+                pricesUSD: 'Prices in USD',
+                hero: 'Quality Digital Products',
+                heroDesc: 'Instant delivery. Lifetime access. Professional items for your projects.',
+                buyNow: 'Buy Now',
+                paymentTitle: 'Complete Your Purchase',
+                totalAmount: 'Total Amount',
+                paypalTitle: '🌎 PayPal Payment (International)',
+                paypalEmail: 'PayPal Email:',
+                paypalInstructions: 'Send the payment via PayPal to the email above',
+                instructionsTitle: '📋 Payment Instructions',
+                step1: '1. Copy the payment information above',
+                step2: '2. Send the exact amount:',
+                step3: '3. Click the "Payment Confirmed" button below',
+                step4: '4. Join Discord to receive your product',
+                confirmPayment: 'Payment Confirmed',
+                joinDiscord: 'Join Discord Server',
+                successTitle: '✅ Payment Confirmed!',
+                successMessage: 'Now join our Discord server to receive your product. Our team will verify and deliver it soon!',
+                footer: '© 2024 Shark Brainrot Store. All products are delivered instantly after verification.',
+                footerNote: 'Secure payments • Instant delivery • 24/7 support on Discord',
+                instantDelivery: 'Instant delivery',
+                lifetimeAccess: 'Lifetime access',
+                commercialLicense: 'Commercial license'
+            }
+        };
 
-  // 🔑 SUAS INFORMAÇÕES DE PAGAMENTO - EDITE AQUI!
-  const paymentInfo = {
-    pix: 'sua-chave-pix@email.com',
-    paypal: 'your-paypal@email.com',
-    discordServerId: '1438627226156269600',
-    discordInvite: 'https://discord.gg/bdVTR7kQQ6'
-  };
+        // PRODUTOS
+        const PRODUCTS = [
+            {
+                id: 1,
+                name: { BR: 'Pacote de Assets Digitais', USA: 'Digital Assets Pack' },
+                priceUSD: 29.99,
+                image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Coleção completa de assets digitais de alta qualidade incluindo templates, gráficos e recursos para seus projetos.',
+                    USA: 'Complete collection of high-quality digital assets including templates, graphics, and resources for your projects.'
+                }
+            },
+            {
+                id: 2,
+                name: { BR: 'Bundle de Templates Premium', USA: 'Premium Template Bundle' },
+                priceUSD: 49.99,
+                image: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Templates profissionais para websites, apresentações e redes sociais. Prontos para personalizar e usar.',
+                    USA: 'Professional templates for websites, presentations, and social media. Ready to customize and use.'
+                }
+            },
+            {
+                id: 3,
+                name: { BR: 'Biblioteca de Recursos', USA: 'Resources Library' },
+                priceUSD: 39.99,
+                image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Biblioteca massiva de ícones, ilustrações, backgrounds e elementos de design para projetos ilimitados.',
+                    USA: 'Massive library of icons, illustrations, backgrounds and design elements for unlimited projects.'
+                }
+            },
+            {
+                id: 4,
+                name: { BR: 'Ferramentas de Automação', USA: 'Automation Tools' },
+                priceUSD: 99.99,
+                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Ferramentas poderosas de automação e scripts para otimizar seu fluxo de trabalho e aumentar produtividade.',
+                    USA: 'Powerful automation tools and scripts to streamline your workflow and boost productivity.'
+                }
+            },
+            {
+                id: 5,
+                name: { BR: 'Pacote Iniciante', USA: 'Starter Package' },
+                priceUSD: 19.99,
+                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Perfeito para iniciantes. Ferramentas essenciais e recursos para começar seus projetos digitais.',
+                    USA: 'Perfect for beginners. Essential tools and resources to get started with your digital projects.'
+                }
+            },
+            {
+                id: 6,
+                name: { BR: 'Pack Exclusivo Pro', USA: 'Exclusive Pro Pack' },
+                priceUSD: 79.99,
+                image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&h=500&fit=crop',
+                description: {
+                    BR: 'Conteúdo exclusivo e premium com recursos avançados. Acesso completo a todas as funcionalidades.',
+                    USA: 'Exclusive premium content with advanced features. Full access to all functionalities.'
+                }
+            }
+        ];
 
-  // 🖼️ URL DA LOGO - EDITE AQUI!
-  const logoUrl = 'https://i.imgur.com/YourImageID.png';
+        // STATE
+        let state = {
+            region: null,
+            selectedProduct: null,
+            showPayment: false,
+            copiedPix: false,
+            copiedPaypal: false,
+            paymentConfirmed: false
+        };
 
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                         TRADUÇÕES BR / USA                             ║
-  // ║  🌍 Textos em Português e Inglês                                       ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  const translations = {
-    BR: {
-      title: 'Shark Brainrot Store',
-      subtitle: 'Itens Digitais Premium',
-      hero: 'Produtos Digitais de Qualidade',
-      heroDesc: 'Entrega instantânea. Acesso vitalício. Itens profissionais para seus projetos.',
-      buyNow: 'Comprar Agora',
-      paymentTitle: 'Complete sua Compra',
-      totalAmount: 'Valor Total',
-      pixTitle: '🇧🇷 Pagamento via PIX',
-      pixKey: 'Chave PIX:',
-      pixInstructions: 'Envie o pagamento via PIX usando a chave acima',
-      instructionsTitle: '📋 Instruções de Pagamento',
-      step1: '1. Copie as informações de pagamento acima',
-      step2: '2. Envie o valor exato:',
-      step3: '3. Clique no botão "Confirmei o Pagamento" abaixo',
-      step4: '4. Entre no Discord para receber seu produto',
-      confirmPayment: 'Confirmei o Pagamento',
-      joinDiscord: 'Entrar no Servidor Discord',
-      successTitle: '✅ Pagamento Confirmado!',
-      successMessage: 'Agora entre no nosso servidor Discord para receber seu produto. Nossa equipe irá verificar e entregar em breve!',
-      footer: '© 2024 Shark Brainrot Store. Todos os produtos são entregues instantaneamente após verificação.',
-      footerNote: 'Pagamentos seguros • Entrega instantânea • Suporte 24/7 no Discord'
-    },
-    USA: {
-      title: 'Shark Brainrot Store',
-      subtitle: 'Premium Digital Items',
-      hero: 'Quality Digital Products',
-      heroDesc: 'Instant delivery. Lifetime access. Professional items for your projects.',
-      buyNow: 'Buy Now',
-      paymentTitle: 'Complete Your Purchase',
-      totalAmount: 'Total Amount',
-      paypalTitle: '🌎 PayPal Payment (International)',
-      paypalEmail: 'PayPal Email:',
-      paypalInstructions: 'Send the payment via PayPal to the email above',
-      instructionsTitle: '📋 Payment Instructions',
-      step1: '1. Copy the payment information above',
-      step2: '2. Send the exact amount:',
-      step3: '3. Click the "Payment Confirmed" button below',
-      step4: '4. Join Discord to receive your product',
-      confirmPayment: 'Payment Confirmed',
-      joinDiscord: 'Join Discord Server',
-      successTitle: '✅ Payment Confirmed!',
-      successMessage: 'Now join our Discord server to receive your product. Our team will verify and deliver it soon!',
-      footer: '© 2024 Shark Brainrot Store. All products are delivered instantly after verification.',
-      footerNote: 'Secure payments • Instant delivery • 24/7 support on Discord'
-    }
-  };
+        // HELPERS
+        const formatPrice = (priceUSD) => {
+            if (state.region === 'BR') {
+                return `R$ ${(priceUSD * CONFIG.USD_TO_BRL).toFixed(2)}`;
+            }
+            return `$${priceUSD.toFixed(2)}`;
+        };
 
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                          CATÁLOGO DE PRODUTOS                          ║
-  // ║  🛍️  Adicione, edite ou remova produtos aqui                           ║
-  // ║                                                                        ║
-  // ║  Estrutura de cada produto:                                            ║
-  // ║  - id: número único                                                    ║
-  // ║  - name: { BR: 'Nome PT', USA: 'Name EN' }                            ║
-  // ║  - priceUSD: preço em dólares                                          ║
-  // ║  - image: URL da imagem                                                ║
-  // ║  - description: { BR: 'Descrição PT', USA: 'Description EN' }         ║
-  // ║  - features: { BR: ['item1', 'item2'], USA: ['item1', 'item2'] }      ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  const products = [
-    {
-      id: 1,
-      name: { BR: 'Pacote de Assets Digitais', USA: 'Digital Assets Pack' },
-      priceUSD: 29.99,
-      image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Coleção completa de assets digitais de alta qualidade incluindo templates, gráficos e recursos para seus projetos.',
-        USA: 'Complete collection of high-quality digital assets including templates, graphics, and resources for your projects.'
-      },
-      features: { 
-        BR: ['Entrega instantânea', 'Acesso vitalício', 'Licença comercial'],
-        USA: ['Instant delivery', 'Lifetime access', 'Commercial license']
-      }
-    },
-    {
-      id: 2,
-      name: { BR: 'Bundle de Templates Premium', USA: 'Premium Template Bundle' },
-      priceUSD: 49.99,
-      image: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Templates profissionais para websites, apresentações e redes sociais. Prontos para personalizar e usar.',
-        USA: 'Professional templates for websites, presentations, and social media. Ready to customize and use.'
-      },
-      features: { 
-        BR: ['50+ templates', 'Fácil customização', 'Atualizações regulares'],
-        USA: ['50+ templates', 'Easy customization', 'Regular updates']
-      }
-    },
-    {
-      id: 3,
-      name: { BR: 'Biblioteca de Recursos', USA: 'Resources Library' },
-      priceUSD: 39.99,
-      image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Biblioteca massiva de ícones, ilustrações, backgrounds e elementos de design para projetos ilimitados.',
-        USA: 'Massive library of icons, illustrations, backgrounds and design elements for unlimited projects.'
-      },
-      features: { 
-        BR: ['1000+ recursos', 'Formatos vetoriais', 'Adições mensais'],
-        USA: ['1000+ resources', 'Vector formats', 'Monthly additions']
-      }
-    },
-    {
-      id: 4,
-      name: { BR: 'Ferramentas de Automação', USA: 'Automation Tools' },
-      priceUSD: 99.99,
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Ferramentas poderosas de automação e scripts para otimizar seu fluxo de trabalho e aumentar produtividade.',
-        USA: 'Powerful automation tools and scripts to streamline your workflow and boost productivity.'
-      },
-      features: { 
-        BR: ['Economia de tempo', 'Fácil integração', 'Suporte prioritário'],
-        USA: ['Time-saving tools', 'Easy integration', 'Priority support']
-      }
-    },
-    {
-      id: 5,
-      name: { BR: 'Pacote Iniciante', USA: 'Starter Package' },
-      priceUSD: 19.99,
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Perfeito para iniciantes. Ferramentas essenciais e recursos para começar seus projetos digitais.',
-        USA: 'Perfect for beginners. Essential tools and resources to get started with your digital projects.'
-      },
-      features: { 
-        BR: ['Para iniciantes', 'Configuração rápida', 'Ótimo custo-benefício'],
-        USA: ['Beginner-friendly', 'Quick setup', 'Great value']
-      }
-    },
-    {
-      id: 6,
-      name: { BR: 'Pack Exclusivo Pro', USA: 'Exclusive Pro Pack' },
-      priceUSD: 79.99,
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&h=500&fit=crop',
-      description: { 
-        BR: 'Conteúdo exclusivo e premium com recursos avançados. Acesso completo a todas as funcionalidades.',
-        USA: 'Exclusive premium content with advanced features. Full access to all functionalities.'
-      },
-      features: { 
-        BR: ['Conteúdo exclusivo', 'Recursos avançados', 'Suporte premium'],
-        USA: ['Exclusive content', 'Advanced features', 'Premium support']
-      }
-    }
-  ];
+        const copyToClipboard = (text, type) => {
+            navigator.clipboard.writeText(text);
+            if (type === 'pix') {
+                state.copiedPix = true;
+                setTimeout(() => {
+                    state.copiedPix = false;
+                    render();
+                }, 2000);
+            } else {
+                state.copiedPaypal = true;
+                setTimeout(() => {
+                    state.copiedPaypal = false;
+                    render();
+                }, 2000);
+            }
+            render();
+        };
 
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                        FUNÇÕES AUXILIARES                              ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  
-  const t = region ? translations[region] : translations.USA;
+        // RENDER
+        const render = () => {
+            const app = document.getElementById('app');
+            const t = state.region ? TRANSLATIONS[state.region] : TRANSLATIONS.USA;
 
-  const formatPrice = (priceUSD) => {
-    if (region === 'BR') {
-      return `R$ ${(priceUSD * USD_TO_BRL).toFixed(2)}`;
-    }
-    return `$${priceUSD.toFixed(2)}`;
-  };
-
-  const copyToClipboard = (text, type) => {
-    navigator.clipboard.writeText(text);
-    if (type === 'pix') {
-      setCopiedPix(true);
-      setTimeout(() => setCopiedPix(false), 2000);
-    } else {
-      setCopiedPaypal(true);
-      setTimeout(() => setCopiedPaypal(false), 2000);
-    }
-  };
-
-  const handleBuyClick = (product) => {
-    setSelectedProduct(product);
-    setShowPayment(true);
-    setPaymentConfirmed(false);
-  };
-
-  const handleClosePayment = () => {
-    setShowPayment(false);
-    setSelectedProduct(null);
-    setCopiedPix(false);
-    setCopiedPaypal(false);
-    setPaymentConfirmed(false);
-  };
-
-  const handleConfirmPayment = () => {
-    setPaymentConfirmed(true);
-  };
-
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                   TELA 1: SELEÇÃO DE REGIÃO                            ║
-  // ║  🌍 Primeira tela - Escolha entre Brasil ou USA                        ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  if (!region) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white/5 backdrop-blur-lg rounded-3xl p-12 border border-white/10 max-w-2xl w-full">
-          <div className="text-center mb-12">
-            <Globe className="w-20 h-20 text-purple-400 mx-auto mb-6" />
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Select Your Region / Selecione sua Região
-            </h1>
-            <p className="text-purple-200">
-              Choose your location to see prices in your currency
-              <br />
-              Escolha sua localização para ver preços na sua moeda
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button
-              onClick={() => setRegion('BR')}
-              className="bg-gradient-to-br from-green-600 to-yellow-600 hover:from-green-700 hover:to-yellow-700 text-white font-bold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="text-5xl mb-4">🇧🇷</div>
-              <div className="text-2xl font-bold mb-2">Brasil</div>
-              <div className="text-sm opacity-90">Preços em BRL</div>
-            </button>
-            
-            <button
-              onClick={() => setRegion('USA')}
-              className="bg-gradient-to-br from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-bold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105"
-            >
-              <div className="text-5xl mb-4">🇺🇸</div>
-              <div className="text-2xl font-bold mb-2">United States</div>
-              <div className="text-sm opacity-90">Prices in USD</div>
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // ╔════════════════════════════════════════════════════════════════════════╗
-  // ║                   TELA 2: LOJA PRINCIPAL                               ║
-  // ║  🛒 Exibe header, produtos e footer                                    ║
-  // ╚════════════════════════════════════════════════════════════════════════╝
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      
-      {/* HEADER - Logo, nome da loja e botão para trocar região */}
-      <header className="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img 
-                src={logoUrl}
-                alt="Shark Brainrot Store Logo" 
-                className="w-16 h-16 rounded-xl"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-white">{t.title}</h1>
-                <p className="text-xs text-purple-300">{t.subtitle}</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <div className="text-sm text-purple-300 hidden md:block">{t.subtitle}</div>
-              <button
-                onClick={() => setRegion(null)}
-                className="text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2"
-              >
-                <Globe className="w-5 h-5" />
-                {region === 'BR' ? '🇧🇷' : '🇺🇸'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* HERO SECTION - Título e descrição principal */}
-      <section className="max-w-7xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-5xl font-bold text-white mb-4">
-          {t.hero}
-        </h2>
-        <p className="text-xl text-purple-200 max-w-2xl mx-auto">
-          {t.heroDesc}
-        </p>
-      </section>
-
-      {/* GRID DE PRODUTOS - Cards com imagem, descrição e botão de compra */}
-      <section className="max-w-7xl mx-auto px-4 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105"
-            >
-              <div className="relative h-64 overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name[region]}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-full font-bold">
-                  {formatPrice(product.priceUSD)}
-                </div>
-              </div>
-              
-              <div className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-3">
-                  {product.name[region]}
-                </h3>
-                <p className="text-purple-200 mb-4 leading-relaxed">
-                  {product.description[region]}
-                </p>
-                
-                <ul className="space-y-2 mb-6">
-                  {product.features[region].map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-sm text-purple-300">
-                      <Check className="w-4 h-4 text-green-400" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                
-                <button
-                  onClick={() => handleBuyClick(product)}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
-                >
-                  {t.buyNow}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* MODAL DE PAGAMENTO - Aparece quando usuário clica em Comprar */}
-      {showPayment && selectedProduct && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl max-w-2xl w-full border border-purple-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-8">
-              
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-3xl font-bold text-white mb-2">
-                    {t.paymentTitle}
-                  </h3>
-                  <p className="text-purple-300">{selectedProduct.name[region]}</p>
-                </div>
-                <button
-                  onClick={handleClosePayment}
-                  className="text-white/60 hover:text-white transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              {!paymentConfirmed ? (
-                <>
-                  <div className="bg-purple-600/20 border border-purple-500/30 rounded-xl p-6 mb-6">
-                    <div className="text-center mb-4">
-                      <div className="text-5xl font-bold text-white mb-2">
-                        {formatPrice(selectedProduct.priceUSD)}
-                      </div>
-                      <div className="text-purple-300">{t.totalAmount}</div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    {region === 'BR' ? (
-                      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                        <h4 className="text-xl font-bold text-white mb-4">
-                          {t.pixTitle}
-                        </h4>
-                        <div className="bg-black/30 rounded-lg p-4 mb-3">
-                          <div className="text-sm text-purple-300 mb-2">{t.pixKey}</div>
-                          <div className="flex items-center justify-between gap-3">
-                            <code className="text-white font-mono break-all">
-                              {paymentInfo.pix}
-                            </code>
-                            <button
-                              onClick={() => copyToClipboard(paymentInfo.pix, 'pix')}
-                              className="flex-shrink-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors"
-                            >
-                              {copiedPix ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                            </button>
-                          </div>
+            if (!state.region) {
+                app.innerHTML = `
+                    <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+                        <div class="bg-white/5 backdrop-blur-lg rounded-3xl p-12 border border-white/10 max-w-2xl w-full">
+                            <div class="text-center mb-12">
+                                <svg class="w-20 h-20 text-purple-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <h1 class="text-4xl font-bold text-white mb-4">
+                                    Select Your Region / Selecione sua Região
+                                </h1>
+                                <p class="text-purple-200">
+                                    Choose your location to see prices in your currency<br>
+                                    Escolha sua localização para ver preços na sua moeda
+                                </p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <button onclick="setRegion('BR')" class="bg-gradient-to-br from-green-600 to-yellow-600 hover:from-green-700 hover:to-yellow-700 text-white font-bold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105">
+                                    <div class="text-5xl mb-4">🇧🇷</div>
+                                    <div class="text-2xl font-bold mb-2">Brasil</div>
+                                    <div class="text-sm opacity-90">Preços em BRL</div>
+                                </button>
+                                
+                                <button onclick="setRegion('USA')" class="bg-gradient-to-br from-blue-600 to-red-600 hover:from-blue-700 hover:to-red-700 text-white font-bold py-8 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105">
+                                    <div class="text-5xl mb-4">🇺🇸</div>
+                                    <div class="text-2xl font-bold mb-2">United States</div>
+                                    <div class="text-sm opacity-90">Prices in USD</div>
+                                </button>
+                            </div>
                         </div>
-                        <p className="text-sm text-purple-200">
-                          {t.pixInstructions}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                        <h4 className="text-xl font-bold text-white mb-4">
-                          {t.paypalTitle}
-                        </h4>
-                        <div className="bg-black/30 rounded-lg p-4 mb-3">
-                          <div className="text-sm text-purple-300 mb-2">{t.paypalEmail}</div>
-                          <div className="flex items-center justify-between gap-3">
-                            <code className="text-white font-mono break-all">
-                              {paymentInfo.paypal}
-                            </code>
-                            <button
-                              onClick={() => copyToClipboard(paymentInfo.paypal, 'paypal')}
-                              className="flex-shrink-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors"
-                            >
-                              {copiedPaypal ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                            </button>
-                          </div>
-                        </div>
-                        <p className="text-sm text-purple-200">
-                          {t.paypalInstructions}
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6">
-                      <h4 className="text-lg font-bold text-yellow-300 mb-3">
-                        {t.instructionsTitle}
-                      </h4>
-                      <ol className="space-y-2 text-sm text-yellow-100">
-                        <li>{t.step1}</li>
-                        <li>{t.step2} <strong>{formatPrice(selectedProduct.priceUSD)}</strong></li>
-                        <li>{t.step3}</li>
-                        <li>{t.step4}</li>
-                      </ol>
                     </div>
+                `;
+                return;
+            }
 
-                    <button
-                      onClick={handleConfirmPayment}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3"
-                    >
-                      <Check className="w-6 h-6" />
-                      {t.confirmPayment}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-6">
-                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-8 text-center">
-                    <div className="text-6xl mb-4">✅</div>
-                    <h4 className="text-2xl font-bold text-green-300 mb-3">
-                      {t.successTitle}
-                    </h4>
-                    <p className="text-green-100">
-                      {t.successMessage}
-                    </p>
-                  </div>
+            app.innerHTML = `
+                <div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+                    <header class="bg-black/30 backdrop-blur-md border-b border-white/10 sticky top-0 z-40">
+                        <div class="max-w-7xl mx-auto px-4 py-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-4">
+                                    <img src="${CONFIG.logoUrl}" alt="Shark Brainrot Store" class="w-16 h-16 rounded-xl">
+                                    <div>
+                                        <h1 class="text-2xl font-bold text-white">${t.title}</h1>
+                                        <p class="text-xs text-purple-300">${t.subtitle}</p>
+                                    </div>
+                                </div>
+                                <button onclick="resetRegion()" class="text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    ${state.region === 'BR' ? '🇧🇷' : '🇺🇸'}
+                                </button>
+                            </div>
+                        </div>
+                    </header>
 
-                  <a
-                    href={paymentInfo.discordInvite}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <ExternalLink className="w-5 h-5" />
-                    {t.joinDiscord}
-                  </a>
+                    <section class="max-w-7xl mx-auto px-4 py-16 text-center">
+                        <h2 class="text-5xl font-bold text-white mb-4">${t.hero}</h2>
+                        <p class="text-xl text-purple-200 max-w-2xl mx-auto">${t.heroDesc}</p>
+                    </section>
+
+                    <section class="max-w-7xl mx-auto px-4 pb-20">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            ${PRODUCTS.map(product => `
+                                <div class="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105">
+                                    <div class="relative h-64 overflow-hidden">
+                                        <img src="${product.image}" alt="${product.name[state.region]}" class="w-full h-full object-cover">
+                                        <div class="absolute top-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-full font-bold">
+                                            ${formatPrice(product.priceUSD)}
+                                        </div>
+                                    </div>
+                                    <div class="p-6">
+                                        <h3 class="text-2xl font-bold text-white mb-3">${product.name[state.region]}</h3>
+                                        <p class="text-purple-200 mb-4 leading-relaxed">${product.description[state.region]}</p>
+                                        <ul class="space-y-2 mb-6">
+                                            <li class="flex items-center gap-2 text-sm text-purple-300">
+                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                ${t.instantDelivery}
+                                            </li>
+                                            <li class="flex items-center gap-2 text-sm text-purple-300">
+                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                ${t.lifetimeAccess}
+                                            </li>
+                                            <li class="flex items-center gap-2 text-sm text-purple-300">
+                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                ${t.commercialLicense}
+                                            </li>
+                                        </ul>
+                                        <button onclick="buyProduct(${product.id})" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105">
+                                            ${t.buyNow}
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+
+                    <footer class="bg-black/30 border-t border-white/10 py-8 mt-20">
+                        <div class="max-w-7xl mx-auto px-4 text-center text-purple-300">
+                            <p>${t.footer}</p>
+                            <p class="mt-2 text-sm text-purple-400">${t.footerNote}</p>
+                        </div>
+                    </footer>
+
+                    ${state.showPayment ? renderPaymentModal(t) : ''}
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+            `;
+        };
 
-      {/* FOOTER - Informações de copyright e nota */}
-      <footer className="bg-black/30 border-t border-white/10 py-8 mt-20">
-        <div className="max-w-7xl mx-auto px-4 text-center text-purple-300">
-          <p>{t.footer}</p>
-          <p className="mt-2 text-sm text-purple-400">{t.footerNote}</p>
-        </div>
-      </footer>
-    </div>
-  );
-};
+        const renderPaymentModal = (t) => {
+            const product = PRODUCTS.find(p => p.id === state.selectedProduct);
+            if (!product) return '';
 
-export default OnlineStore;
+            if (state.paymentConfirmed) {
+                return `
+                    <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl max-w-2xl w-full border border-purple-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
+                            <div class="p-8">
+                                <div class="space-y-6">
+                                    <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-8 text-center">
+                                        <div class="text-6xl mb-4">✅</div>
+                                        <h4 class="text-2xl font-bold text-green-300 mb-3">${t.successTitle}</h4>
+                                        <p class="text-green-100">${t.successMessage}</p>
+                                    </div>
+                                    <a href="${CONFIG.paymentInfo.discordInvite}" target="_blank" class="flex items-center justify-center gap-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                        ${t.joinDiscord}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const paymentKey = state.region === 'BR' ? CONFIG.paymentInfo.pix : CONFIG.paymentInfo.paypal;
+            const copied = state.region === 'BR' ? state.copiedPix : state.copiedPaypal;
+            const paymentType = state.region === 'BR' ? 'pix' : 'paypal';
+
+            return `
+                <div class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl max-w-2xl w-full border border-purple-500/30 shadow-2xl max-h-[90vh] overflow-y-auto">
+                        <div class="p-8">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <h3 class="text-3xl font-bold text-white mb-2">${t.paymentTitle}</h3>
+                                    <p class="text-purple-300">${product.name[state.region]}</p>
+                                </div>
+                                <button onclick="closePayment()" class="text-white/60 hover:text-white transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <div class="bg-purple-600/20 border border-purple-500/30 rounded-xl p-6 mb-6">
+                                <div class="text-center">
+                                    <div class="text-5xl font-bold text-white mb-2">${formatPrice(product.priceUSD)}</div>
+                                    <div class="text-purple-300">${t.totalAmount}</div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="bg-white/5 rounded-xl p-6 border border-white/10">
+                                    <h4 class="text-xl font-bold text-white mb-4">${state.region === 'BR' ? t.pixTitle : t.paypalTitle}</h4>
+                                    <div class="bg-black/30 rounded-lg p-4 mb-3">
+                                        <div class="text-sm text-purple-300 mb-2">${state.region === 'BR' ? t.pixKey : t.paypalEmail}</div>
+                                        <div class="flex items-center justify-between gap-3">
+                                            <code class="text-white font-mono break-all">${paymentKey}</code>
+                                            <button onclick="copyToClipboard('${paymentKey}', '${paymentType}')" class="flex-shrink-0 bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors">
+                                                ${copied ? `
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                    </svg>
+                                                ` : `
+                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                                    </svg>
+                                                `}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-purple-200">${state.region === 'BR' ? t.pixInstructions : t.paypalInstructions}</p>
+                                </div>
+
+                                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6">
+                                    <h4 class="text-lg font-bold text-yellow-300 mb-3">${t.instructionsTitle}</h4>
+                                    <ol class="space-y-2 text-sm text-yellow-100">
+                                        <li>${t.step1}</li>
+                                        <li>${t.step2} <strong>${formatPrice(product.priceUSD)}</strong></li>
+                                        <li>${t.step3}</li>
+                                        <li>${t.step4}</li>
+                                    </ol>
+                                </div>
+
+                                <button onclick="confirmPayment()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    ${t.confirmPayment}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        // ACTIONS
+        window.setRegion = (region) => {
+            state.region = region;
+            render();
+        };
+
+        window.resetRegion = () => {
+            state.region = null;
+            render();
+        };
+
+        window.buyProduct = (id) => {
+            state.selectedProduct = id;
+            state.showPayment = true;
+            state.paymentConfirmed = false;
+            render();
+        };
+
+        window.closePayment = () => {
+            state.showPayment = false;
+            state.selectedProduct = null;
+            state.copiedPix = false;
+            state.copiedPaypal = false;
+            state.paymentConfirmed = false;
+            render();
+        };
+
+        window.confirmPayment = () => {
+            state.paymentConfirmed = true;
+            render();
+        };
+
+        window.copyToClipboard = copyToClipboard;
+
+        // INIT
+        render();
+    </script>
+</body>
+</html>
