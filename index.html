@@ -24,11 +24,11 @@
         const CONFIG = {
             USD_TO_BRL: 5.0,
             paymentInfo: {
-                pix: 'c1015f9f-e8b2-4abe-b342-c960250998f9',
-                paypal: 'andre_analista@hotmail.com',
+                pix: 'sua-chave-pix@email.com',
+                paypal: 'your-paypal@email.com',
                 discordInvite: 'https://discord.gg/bdVTR7kQQ6'
             },
-            logoUrl: 'https://imgur.com/gNqZYTt.png'
+            logoUrl: 'https://i.imgur.com/YourImageID.png'
         };
 
         // TRADUÇÕES
@@ -99,67 +99,93 @@
             }
         };
 
-        // PRODUTOS
+        // PRODUTOS - ADICIONE MAIS AQUI!
         const PRODUCTS = [
             {
                 id: 1,
-                name: { BR: 'Pacote de Assets Digitais', USA: 'Digital Assets Pack' },
-                priceUSD: 29.99,
-                image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Coleção completa de assets digitais de alta qualidade incluindo templates, gráficos e recursos para seus projetos.',
-                    USA: 'Complete collection of high-quality digital assets including templates, graphics, and resources for your projects.'
-                }
+                name: { BR: 'Karambit Doppler', USA: 'Karambit Doppler' },
+                priceUSD: 25.00,
+                image: 'https://images.unsplash.com/photo-1593642532400-2682810df593?w=400&h=400&fit=crop',
+                badge: { BR: 'NOVO', USA: 'NEW' },
+                badgeColor: 'green'
             },
             {
                 id: 2,
-                name: { BR: 'Bundle de Templates Premium', USA: 'Premium Template Bundle' },
-                priceUSD: 49.99,
-                image: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Templates profissionais para websites, apresentações e redes sociais. Prontos para personalizar e usar.',
-                    USA: 'Professional templates for websites, presentations, and social media. Ready to customize and use.'
-                }
+                name: { BR: 'M4A4 Howl', USA: 'M4A4 Howl' },
+                priceUSD: 45.00,
+                image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=400&fit=crop',
+                badge: { BR: 'POPULAR', USA: 'POPULAR' },
+                badgeColor: 'purple'
             },
             {
                 id: 3,
-                name: { BR: 'Biblioteca de Recursos', USA: 'Resources Library' },
-                priceUSD: 39.99,
-                image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Biblioteca massiva de ícones, ilustrações, backgrounds e elementos de design para projetos ilimitados.',
-                    USA: 'Massive library of icons, illustrations, backgrounds and design elements for unlimited projects.'
-                }
+                name: { BR: 'AWP Dragon Lore', USA: 'AWP Dragon Lore' },
+                priceUSD: 89.99,
+                image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=400&fit=crop',
+                badge: { BR: 'RARO', USA: 'RARE' },
+                badgeColor: 'red'
             },
             {
                 id: 4,
-                name: { BR: 'Ferramentas de Automação', USA: 'Automation Tools' },
-                priceUSD: 99.99,
-                image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Ferramentas poderosas de automação e scripts para otimizar seu fluxo de trabalho e aumentar produtividade.',
-                    USA: 'Powerful automation tools and scripts to streamline your workflow and boost productivity.'
-                }
+                name: { BR: 'Butterfly Fade', USA: 'Butterfly Fade' },
+                priceUSD: 55.00,
+                image: 'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=400&h=400&fit=crop',
+                badge: { BR: 'DESTAQUE', USA: 'FEATURED' },
+                badgeColor: 'yellow'
             },
             {
                 id: 5,
-                name: { BR: 'Pacote Iniciante', USA: 'Starter Package' },
-                priceUSD: 19.99,
-                image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Perfeito para iniciantes. Ferramentas essenciais e recursos para começar seus projetos digitais.',
-                    USA: 'Perfect for beginners. Essential tools and resources to get started with your digital projects.'
-                }
+                name: { BR: 'Glock Fade', USA: 'Glock Fade' },
+                priceUSD: 15.00,
+                image: 'https://images.unsplash.com/photo-1579613832111-ac7dfcc7723e?w=400&h=400&fit=crop'
             },
             {
                 id: 6,
-                name: { BR: 'Pack Exclusivo Pro', USA: 'Exclusive Pro Pack' },
-                priceUSD: 79.99,
-                image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&h=500&fit=crop',
-                description: {
-                    BR: 'Conteúdo exclusivo e premium com recursos avançados. Acesso completo a todas as funcionalidades.',
-                    USA: 'Exclusive premium content with advanced features. Full access to all functionalities.'
-                }
+                name: { BR: 'AK-47 Fire Serpent', USA: 'AK-47 Fire Serpent' },
+                priceUSD: 65.00,
+                image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=400&fit=crop',
+                badge: { BR: 'EXCLUSIVO', USA: 'EXCLUSIVE' },
+                badgeColor: 'red'
+            },
+            {
+                id: 7,
+                name: { BR: 'Bayonet Tiger Tooth', USA: 'Bayonet Tiger Tooth' },
+                priceUSD: 38.00,
+                image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=400&h=400&fit=crop'
+            },
+            {
+                id: 8,
+                name: { BR: 'USP-S Kill Confirmed', USA: 'USP-S Kill Confirmed' },
+                priceUSD: 22.00,
+                image: 'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=400&h=400&fit=crop'
+            },
+            {
+                id: 9,
+                name: { BR: 'M9 Bayoneta Marble', USA: 'M9 Bayonet Marble' },
+                priceUSD: 72.00,
+                image: 'https://images.unsplash.com/photo-1592659762303-90081d34b277?w=400&h=400&fit=crop',
+                badge: { BR: 'POPULAR', USA: 'POPULAR' },
+                badgeColor: 'purple'
+            },
+            {
+                id: 10,
+                name: { BR: 'Desert Eagle Blaze', USA: 'Desert Eagle Blaze' },
+                priceUSD: 28.00,
+                image: 'https://images.unsplash.com/photo-1605792657660-596af9009e82?w=400&h=400&fit=crop'
+            },
+            {
+                id: 11,
+                name: { BR: 'Flip Knife Gamma', USA: 'Flip Knife Gamma' },
+                priceUSD: 42.00,
+                image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=400&fit=crop'
+            },
+            {
+                id: 12,
+                name: { BR: 'P250 Asiimov', USA: 'P250 Asiimov' },
+                priceUSD: 12.00,
+                image: 'https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=400&h=400&fit=crop',
+                badge: { BR: 'BARATO', USA: 'CHEAP' },
+                badgeColor: 'green'
             }
         ];
 
@@ -268,44 +294,35 @@
                     </section>
 
                     <section class="max-w-7xl mx-auto px-4 pb-20">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            ${PRODUCTS.map(product => `
-                                <div class="bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:transform hover:scale-105">
-                                    <div class="relative h-64 overflow-hidden">
-                                        <img src="${product.image}" alt="${product.name[state.region]}" class="w-full h-full object-cover">
-                                        <div class="absolute top-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-full font-bold">
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                            ${PRODUCTS.map(product => {
+                                const badgeColors = {
+                                    green: 'bg-green-500',
+                                    purple: 'bg-purple-500',
+                                    red: 'bg-red-500',
+                                    yellow: 'bg-yellow-500'
+                                };
+                                return `
+                                <div class="bg-slate-800/50 backdrop-blur-sm rounded-lg overflow-hidden border border-slate-700 hover:border-purple-500 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer group">
+                                    <div class="relative aspect-square overflow-hidden bg-slate-900">
+                                        <img src="${product.image}" alt="${product.name[state.region]}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                        ${product.badge ? `
+                                            <div class="absolute top-2 left-2 ${badgeColors[product.badgeColor] || 'bg-blue-500'} text-white text-xs font-bold px-2 py-1 rounded">
+                                                ${product.badge[state.region]}
+                                            </div>
+                                        ` : ''}
+                                        <div class="absolute top-2 right-2 bg-purple-600 text-white text-sm font-bold px-3 py-1 rounded-full">
                                             ${formatPrice(product.priceUSD)}
                                         </div>
                                     </div>
-                                    <div class="p-6">
-                                        <h3 class="text-2xl font-bold text-white mb-3">${product.name[state.region]}</h3>
-                                        <p class="text-purple-200 mb-4 leading-relaxed">${product.description[state.region]}</p>
-                                        <ul class="space-y-2 mb-6">
-                                            <li class="flex items-center gap-2 text-sm text-purple-300">
-                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                </svg>
-                                                ${t.instantDelivery}
-                                            </li>
-                                            <li class="flex items-center gap-2 text-sm text-purple-300">
-                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                </svg>
-                                                ${t.lifetimeAccess}
-                                            </li>
-                                            <li class="flex items-center gap-2 text-sm text-purple-300">
-                                                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                                                </svg>
-                                                ${t.commercialLicense}
-                                            </li>
-                                        </ul>
-                                        <button onclick="buyProduct(${product.id})" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105">
+                                    <div class="p-3">
+                                        <h3 class="text-white font-bold text-sm mb-2 truncate">${product.name[state.region]}</h3>
+                                        <button onclick="buyProduct(${product.id})" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-2 px-4 rounded text-sm transition-all duration-300">
                                             ${t.buyNow}
                                         </button>
                                     </div>
                                 </div>
-                            `).join('')}
+                            `}).join('')}
                         </div>
                     </section>
 
@@ -469,7 +486,3 @@
     </script>
 </body>
 </html>
-
-
-
-
